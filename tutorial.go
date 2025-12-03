@@ -117,5 +117,7 @@ func main()	{
 
 	fmt.Println("-------§-------")
 
-
+	for range 3 {
+		fmt.Println("Hello")
+	}
 }

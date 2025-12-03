@@ -8,7 +8,6 @@ import (
 	// "strconv"
 )
 
-
 func main() {
 	fmt.Println("Day 3 - Let's go!")
 	filename := "day3.txt"
@@ -31,38 +30,36 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		fmt.Println(line)
-		
+
 		// Your processing logic here
 
-		var firstMax int64 = 0
-		var secondMax int64 = 0
-		var idx = 0
-		for i:= 0; i < len(line) - 1; i++ {
-			var num, _ = strconv.ParseInt(string(line[i]), 10, 64)
-			if num > firstMax {
-				firstMax = num
-				idx = i
+		var bits []int64
+		var currentIdx = 0
+		for x:=1; x<=12; x++ {
+			var currentMax int64 = 0
+			for i := currentIdx; i < len(line)-12+x; i++ {
+				var num, _ = strconv.ParseInt(string(line[i]), 10, 64)
+				if num > currentMax {
+					currentMax = num
+					currentIdx = i + 1
+				}
+				if num == 9 {
+					break
+				}
 			}
-			if (num == 9) {
-				break
-			}
-		}
-		for i:= idx + 1; i < len(line); i++ {
-			var num, _ = strconv.ParseInt(string(line[i]), 10, 64)
-			if num > secondMax {
-				secondMax = num
-			} 
-			if num == 9 {
-				break
-			}
-		}
-		fmt.Println("Max:", firstMax, "at index", idx)
-		fmt.Println("Second Max:", secondMax)
-		var result = strconv.Itoa(int(firstMax)) + strconv.Itoa(int(secondMax))
-		var intResult, _ = strconv.ParseInt(result, 10, 64)
-		fmt.Println("Result for line:", result)
-		total += int(intResult)
+			fmt.Println("Current Max:", currentMax, "at index", currentIdx-1)
+			bits = append(bits, currentMax)
+		}	
 
+		fmt.Println("Bits:", bits)
+
+		var resultStr string
+		for _, b := range bits {
+			resultStr += strconv.FormatInt(b, 10)
+		}
+		fmt.Println("Result Str:", resultStr)
+		var intResult, _ = strconv.ParseInt(resultStr, 10, 64)
+		total += int(intResult)
 	}
-	fmt.Println("Part 1 Total:", total)
+	fmt.Println("Total:", total)
 }
