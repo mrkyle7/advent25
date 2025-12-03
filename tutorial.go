@@ -5,6 +5,20 @@ import (
 	// "slices"
 )
 
+func splitByN(s string, n int) []string {
+	var parts []string
+	if len(s) % n != 0 {
+		return parts
+	}
+
+	i := 0
+	for range len(s) / n {
+		parts = append(parts, s[i:i+n])
+		i += n
+	}
+	return parts
+}
+
 func main()	{
 	fmt.Println("Hello, World!")
 	i := 1
@@ -73,4 +87,31 @@ func main()	{
 	s = append(s, "d")
 	s = append(s, "e", "f")
 	fmt.Println("Slice appended:", s, "cap:", cap(s), "len:", len(s))
+
+	fmt.Println("-------§-------")
+
+	testI := "19561"
+	
+	valid := false
+	for i:=1 ; i <= len(testI) / 2; i++ {
+		splitted := splitByN(testI, i)
+		fmt.Printf("%q\n",splitted)
+
+		if len(splitted) == 0 {
+			continue
+		}
+		test := splitted[0]
+		allMatch := true
+		for _, i:= range splitted {
+			if i != test {
+				allMatch = false
+				break
+			}
+		}
+		if allMatch {
+			valid = true
+			break;
+		}
+	}
+	fmt.Println(valid)
 }
