@@ -114,4 +114,8 @@ func main()	{
 		}
 	}
 	fmt.Println(valid)
+
+	fmt.Println("-------§-------")
+
+
 }
