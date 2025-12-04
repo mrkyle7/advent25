@@ -120,4 +120,8 @@ func main()	{
 	for range 3 {
 		fmt.Println("Hello")
 	}
+
+	for a, s:= range "hello" {
+		fmt.Println(a, s)
+	}
 }
