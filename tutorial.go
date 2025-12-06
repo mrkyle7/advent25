@@ -124,4 +124,10 @@ func main()	{
 	for a, s:= range "hello" {
 		fmt.Println(a, s)
 	}
+	fmt.Println("-------§-------")
+//             "12 123 1. .2"
+	testStr := "12 123 1   2"
+	for _, c:= range testStr {
+		fmt.Println(string(c))
+	}
 }

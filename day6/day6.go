@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 )
 
@@ -27,50 +26,95 @@ func main() {
 
 	total := 0
 
-	var mathsWork [][]string
-
 	// Your code logic here
 
 	scanner := bufio.NewScanner(file)
 
+	var lines []string
+
 	for scanner.Scan() {
 		line := scanner.Text()
-		re := regexp.MustCompile(`\s+`)
-		cols := re.Split(line, -1)
-		var maths []string
-		for _, c := range cols {
-			if c != "" {
-				maths = append(maths, c)
-			}
-		}
-		mathsWork = append(mathsWork, maths)
+		lines = append(lines, line)
+	}
 
+	var colLengths []int
+	currentCol := 0
+
+	for idx, char := range lines[len(lines)-1] {
+		s := string(char)
+		if idx == 0 {
+			continue
+		}
+		if s == " " {
+			currentCol++
+		} else {
+			colLengths = append(colLengths, currentCol)
+			currentCol = 0
+		}
+	}
+
+	colLengths = append(colLengths, currentCol+1)
+	fmt.Println("Col lengths", colLengths)
+
+	var mathsWork [][]string
+
+	for _, line := range lines {
+		fmt.Printf("%q\n", line)
+		currentIdx := 0
+		var row []string
+		for _, length := range colLengths {
+			row = append(row, line[currentIdx:currentIdx+length])
+			currentIdx += length + 1
+		}
+		mathsWork = append(mathsWork, row)
 	}
 
 	numWork := len(mathsWork[0])
 	numNumbers := len(mathsWork) - 1
 
-	for i:=0 ; i < numWork ; i++ {
-		workResult := 0
-		fmt.Println(i)
-		switch mathsWork[numNumbers][i] {
-		case "*":
-			fmt.Println("Calculating * for", mathsWork[0][i])
-			workResult = 1
-			for num := 0; num < numNumbers; num++{
-				calcNum, _ := strconv.Atoi(mathsWork[num][i])
-				workResult *= calcNum
+	var actualMaths [][]string
+
+	for worki := range numWork {
+		var realNumbers []string
+		for bit := colLengths[worki]; bit > 0; bit-- {
+			var newNumString string
+			for num := range numNumbers {
+				fmt.Printf("dealing with %q\n", mathsWork[num][worki])
+				strBit := string(mathsWork[num][worki][bit-1])
+				if strBit != " " {
+					newNumString += strBit
+				}
 			}
-		case "+":
-			fmt.Println("Calculating + for", mathsWork[0][i])
-			for num := 0; num < numNumbers; num++{
-				calcNum, _ := strconv.Atoi(mathsWork[num][i])
-				workResult += calcNum
-			}
+			fmt.Println(newNumString)
+			realNumbers = append(realNumbers, newNumString)
 		}
-		fmt.Println(workResult)
-		total += workResult
+		realNumbers = append(realNumbers, string(mathsWork[numNumbers][worki][0]))
+		fmt.Println(realNumbers)
+		actualMaths = append(actualMaths, realNumbers)
+
 	}
+
+	for _, maths := range actualMaths {
+		fmt.Println("doing maths for:", maths)
+		switch maths[len(maths)-1] {
+		case "*":
+			result := 1
+			for x := 0; x < len(maths)-1; x++ {
+				num, _ := strconv.Atoi(maths[x])
+				result *= num
+			}
+			total += result
+		case "+":
+			result := 0
+			for x := 0; x < len(maths)-1; x++ {
+				num, _ := strconv.Atoi(maths[x])
+				result += num
+			}
+			total += result
+		}
+	}
+
 	fmt.Printf("%q\n", mathsWork)
+	fmt.Println(actualMaths)
 	fmt.Println("Total", total)
 }
