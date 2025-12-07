@@ -61,20 +61,24 @@ func main() {
 			}
 			// process . (0) with a beam above them
 			if location == 0 && data[rowIdx-1][colIdx] > 0 {
-				data[rowIdx][colIdx] = 1
+				data[rowIdx][colIdx] = data[rowIdx-1][colIdx]
 				continue
 			}
 			// process splitters: ^ (-1)
 			if location == -1 && data[rowIdx-1][colIdx] > 0 {
 				//we split it!
-				total++
 				if colIdx != 0 {
-					data[rowIdx][colIdx-1] = 1
+					data[rowIdx][colIdx-1] += data[rowIdx-1][colIdx]
 				}
 				if colIdx != rowLength {
-					data[rowIdx][colIdx+1] = 1
+					// we haven't pulled down beams above yet
+					if data[rowIdx][colIdx+1] == 0 && data[rowIdx-1][colIdx+1] > 0 {
+						data[rowIdx][colIdx+1] = data[rowIdx-1][colIdx+1]
+					}
+					data[rowIdx][colIdx+1] += data[rowIdx-1][colIdx]
 				}
 			}
+
 		}
 	}
 
@@ -84,5 +88,9 @@ func main() {
 		fmt.Println(line)
 	}
 	fmt.Println("------§-------")
+	for _, num := range data[len(data)-1] {
+		total += num
+	}
 	fmt.Println("total", total)
+	
 }
