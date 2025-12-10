@@ -130,4 +130,17 @@ func main()	{
 	for _, c:= range testStr {
 		fmt.Println(string(c))
 	}
+
+	fmt.Println("-------§-------")
+	mappy := make(map[int]struct{})
+	
+	mappy[0] = struct{}{}
+
+	if _, ok := mappy[1]; ok{
+		fmt.Println("mappy contains key 1:", true)
+	} else {
+		fmt.Println("mappy contains key 1:", false)
+	}
+	fmt.Println(mappy[0])
+	fmt.Println(mappy[1])
 }
